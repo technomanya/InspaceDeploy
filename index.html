@@ -78,7 +78,7 @@ body {
 		</style>
 		<link id="-gd-engine-icon" rel="icon" type="image/png" href="index.icon.png" />
 <link rel="apple-touch-icon" href="index.apple-touch-icon.png"/>
-
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
 	</head>
 	<body>
 		<canvas id="canvas">
@@ -97,7 +97,7 @@ body {
 
 		<script src="index.js"></script>
 		<script>
-const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":6346848,"index.wasm":43016933},"focusCanvas":true,"gdextensionLibs":[]};
+const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":6346704,"index.wasm":43016933},"focusCanvas":true,"gdextensionLibs":[]};
 const GODOT_THREADS_ENABLED = false;
 const engine = new Engine(GODOT_CONFIG);
 
@@ -190,6 +190,20 @@ const engine = new Engine(GODOT_CONFIG);
 			},
 		}).then(() => {
 			setStatusMode('hidden');
+			const tg = window.Telegram.WebApp;
+			const user = tg.initDataUnsafe?.user || null;
+
+			if (user) {
+				console.log("Telegram Username:", user.username || "Guest");
+				
+				// Pass the username to Godot game
+				const gameInstance = engine.getInstance();
+				if (gameInstance) {
+					gameInstance.call('set_username', user.username || "Guest");
+				}
+			} else {
+				console.log("User information not available");
+			}
 		}, displayFailureNotice);
 	}
 }());
